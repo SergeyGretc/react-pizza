@@ -1,23 +1,34 @@
-import logo from './logo.svg';
-import './App.css';
+import "./scss/app.scss";
+import React, { useState } from "react";
+import NotFound from "./pages/notFound";
+import Header from "./components/header";
+import { render } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Cart from "./pages/cart";
 
+import Home from "./pages/home";
 function App() {
+  const [searchValue, setSearchValue] = useState("");
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div className="wrapper">
+        <Header searchValue={searchValue} setSearchValue={setSearchValue} />
+        <div className="content">
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <Home
+                  searchValue={searchValue}
+                  setSearchValue={setSearchValue}
+                />
+              }
+            />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/*" element={<NotFound />} />
+          </Routes>
+        </div>
+      </div>
     </div>
   );
 }

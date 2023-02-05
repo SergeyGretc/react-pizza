@@ -1,22 +1,38 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { setSort } from "../redux/slices/filter/slice";
+import { Sort, SortPropertyEnum } from "../redux/slices/filter/types";
 
-const Sort = ({ value, onClickSortType }) => {
+type SortItem = {
+  name: string;
+  sortProperty: SortPropertyEnum;
+};
+
+export const sortList: SortItem[] = [
+  { name: "популярности", sortProperty: SortPropertyEnum.RATING_DESC },
+  { name: "цене", sortProperty: SortPropertyEnum.RATING_ASC },
+  { name: "алфавиту", sortProperty: SortPropertyEnum.PRICE_DESC },
+  { name: "популярности вниз", sortProperty: SortPropertyEnum.PRICE_ASC },
+  { name: "цене вниз", sortProperty: SortPropertyEnum.TITLE_DESC },
+  { name: "алфавиту вниз", sortProperty: SortPropertyEnum.TITLE_ASC },
+];
+
+type SortPopupProps = {
+  value: Sort;
+};
+const SortPopup: React.FC<SortPopupProps> = React.memo(({ value }) => {
+  const dispatch = useDispatch();
+
+  const sortRef = React.useRef<HTMLDivElement>(null);
+
   const [open, setOpen] = useState(false);
-  const handleSelected = (obj) => {
-    setOpen(!open);
-    onClickSortType(obj);
+  const handleSelected = (obj: SortItem) => {
+    setOpen(false);
+    dispatch(setSort(obj));
   };
 
-  const list = [
-    { name: "популярности", sortProperty: "rating" },
-    { name: "цене", sortProperty: "price" },
-    { name: "алфавиту", sortProperty: "title" },
-    { name: "популярности вниз", sortProperty: "-rating" },
-    { name: "цене вниз", sortProperty: "-price" },
-    { name: "алфавиту вниз", sortProperty: "-title" },
-  ];
   return (
-    <div className="sort">
+    <div ref={sortRef} className="sort">
       <div className="sort__label">
         <svg
           width="10"
@@ -42,7 +58,7 @@ const Sort = ({ value, onClickSortType }) => {
       {open && (
         <div className="sort__popup">
           <ul>
-            {list.map((obj, i) => (
+            {sortList.map((obj, i) => (
               <li
                 key={i}
                 onClick={() => {
@@ -60,6 +76,6 @@ const Sort = ({ value, onClickSortType }) => {
       )}
     </div>
   );
-};
+});
 
-export default Sort;
+export default SortPopup;
